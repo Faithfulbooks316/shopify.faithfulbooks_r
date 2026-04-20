@@ -1,0 +1,75 @@
+import os
+from pathlib import Path
+import json
+import zipfile
+import argparse
+
+def scan_and_list_files(base_dir="faithfulbooks-repo"):
+    root = Path(base_dir)
+    products_dir = root / "products"
+    report = {}
+    print("🔍 Scanning uploaded files...\n")
+    for prod_dir in products_dir.iterdir():
+        if prod_dir.is_dir() and prod_dir.name != "archive":
+            files_dir = prod_dir / "files"
+            if files_dir.exists():
+                files = [f.name for f in files_dir.rglob("*") if f.is_file()]
+                report[prod_dir.name] = files
+                
+                # Update metadata.json with real filename list
+                metadata_path = prod_dir / "metadata.json"
+                if metadata_path.exists():
+                    with open(metadata_path, "r", encoding="utf-8") as f:
+                        metadata = json.load(f)
+                    metadata["included_files"] = files
+                    metadata["gumroad_ready"] = len(files) > 0
+                    metadata["last_scanned"] = str(Path(__file__).parent.parent / "bundles")
+                    with open(metadata_path, "w", encoding="utf-8") as f:
+                        json.dump(metadata, f, indent=2)
+                
+                print(f"✅ {prod_dir.name}: {len(files)} files")
+                for f in files:
+                    print(f"   • {f}")
+    print("\n📋 FULL FILENAME LIST (copy-paste ready for Notion/Gumroad):")
+    for slug, files in report.items():
+        print(f"\n{slug}:")
+        for f in files:
+            print(f"  - {f}")
+    return report
+
+def generate_bundles(base_dir="faithfulbooks-repo", specific_slugs=None):
+    root = Path(base_dir)
+    products_dir = root / "products"
+    bundles_dir = root / "bundles"
+    bundles_dir.mkdir(exist_ok=True)
+    
+    for prod_dir in products_dir.iterdir():
+        if prod_dir.is_dir() and prod_dir.name != "archive":
+            slug = prod_dir.name
+            if specific_slugs and slug not in specific_slugs:
+                continue
+            files_dir = prod_dir / "files"
+            if not files_dir.exists() or not any(files_dir.iterdir()):
+                print(f"⚠️  No files yet in {slug}/files/ — skipping bundle")
+                continue
+            
+            bundle_path = bundles_dir / f"{slug}-bundle.zip"
+            with zipfile.ZipFile(bundle_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for file_path in files_dir.rglob("*"):
+                    if file_path.is_file():
+                        arcname = file_path.relative_to(prod_dir)
+                        zipf.write(file_path, arcname)
+            print(f"🚀 Bundle created → {bundle_path}")
+    print("\n✅ All bundles ready — Gumroad can pull these live right now.")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="FaithfulBooks Auto-Bundle Generator — scans your uploaded files, lists filenames, builds Gumroad-ready ZIPs")
+    parser.add_argument("--list-only", action="store_true", help="Only scan & print filename list")
+    parser.add_argument("--products", nargs="*", help="Specific product slugs (e.g. eternal-flame-v1 next-book-v1)")
+    args = parser.parse_args()
+    
+    if args.list_only:
+        scan_and_list_files()
+    else:
+        generate_bundles(specific_slugs=args.products)
+        scan_and_list_files()  # always show the clean list at the end
