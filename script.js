@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (time <= 0) return;
         time--;
         if (time % 60 === 0) {
-            console.log(`Offer ends soon: ${Math.floor(time / 60)} min left`);
+            const minutesLeft = Math.floor(time / 60);
+            document.body.dataset.offerMinutesLeft = String(minutesLeft);
         }
     }, 1000);
 
