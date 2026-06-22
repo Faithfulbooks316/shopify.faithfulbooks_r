@@ -1,0 +1,171 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #0a0a0a;
+    color: #e0d4b8;
+    font-family: 'Cinzel', serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10,10,10,0.95);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.logo {
+    font-family: 'UnifrakturCook', cursive;
+    font-size: 1.8rem;
+    color: #b38b2d;
+}
+
+.cta-btn {
+    background: #8b0000;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.hero-scroll {
+    height: 100vh;
+    min-height: 700px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('assets/dark-bg.svg');
+    background-size: cover;
+    background-position: center;
+    padding-top: 80px;
+}
+
+.scroll-container {
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+}
+
+.parchment {
+    width: 100%;
+    border: 12px solid #d4af37;
+    box-shadow: 0 0 60px rgba(139,0,0,0.6);
+    border-radius: 8px;
+    min-height: 460px;
+    object-fit: cover;
+}
+
+.scroll-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 80%;
+}
+
+h1 {
+    font-size: 3.5rem;
+    color: #ffd700;
+    text-shadow: 0 0 20px #8b0000;
+}
+
+.subtitle {
+    font-size: 1.6rem;
+    margin: 1rem 0;
+}
+
+.buy-cta {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 1.2rem 3rem;
+    background: linear-gradient(#ffd700, #b38b2d);
+    color: #000;
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-decoration: none;
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(255,215,0,0.5);
+    animation: ctaPulse 2.2s ease-in-out infinite;
+}
+
+.content {
+    padding: 4rem 10%;
+    text-align: center;
+}
+
+.book-cover {
+    max-width: 400px;
+    width: 100%;
+    margin: 2rem 0;
+    border: 8px solid #333;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    background: #111;
+}
+
+@keyframes ctaPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,215,0,0.45); }
+    50% { transform: scale(1.03); box-shadow: 0 0 34px rgba(255,215,0,0.65); }
+}
+
+@media (max-width: 1024px) {
+    h1 { font-size: 2.7rem; }
+    .subtitle { font-size: 1.3rem; }
+    .hero-scroll { min-height: 620px; }
+}
+
+@media (max-width: 768px) {
+    header {
+        gap: 0.75rem;
+        padding: 0.8rem;
+    }
+
+    .logo { font-size: 1.3rem; }
+
+    .cta-btn {
+        padding: 0.65rem 0.9rem;
+        font-size: 0.9rem;
+    }
+
+    .hero-scroll {
+        min-height: 560px;
+        padding-top: 72px;
+    }
+
+    .parchment {
+        min-height: 390px;
+        border-width: 8px;
+    }
+
+    .scroll-overlay { width: 88%; }
+
+    h1 { font-size: 2rem; }
+
+    .subtitle { font-size: 1.05rem; }
+
+    .buy-cta {
+        font-size: 1rem;
+        padding: 0.95rem 1.5rem;
+    }
+
+    .content { padding: 3rem 6%; }
+}
+
+@media (max-width: 420px) {
+    h1 { font-size: 1.65rem; }
+    .subtitle { font-size: 0.95rem; }
+    .hero-scroll { min-height: 500px; }
+}
